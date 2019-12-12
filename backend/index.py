@@ -1,6 +1,10 @@
 from flask import Flask
+from flask_pymongo import PyMongo
+
 app = Flask(__name__)
+app.config["MONGO_URI"] = "mongodb://localhost:27017/mealgo"
+mongo = PyMongo(app)
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return 'success!' #mongo.db.planner.find({"date": '2019-12-12'}).find_one_or_404()
