@@ -39,12 +39,7 @@
 - on click plus: go to meal creation screen
 - on drag select: allow to add plan
 
-**3. MEAL**
-
-* Find recipes (autocomplete)
-* add recipes
-
-**4. RECIPE**
+**3. RECIPE**
 
 * Name
 * Add ingredients (autocomplete)
