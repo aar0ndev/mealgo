@@ -11,7 +11,7 @@ def generate_data():
     d = [{"_id": f"demo-{day.year}-{day.month:02}", "user_id": "demo", "month": f"{day.year}-{day.month:02}"}
          for day in [today, last_month, next_month]]
 
-    return {'user_id': 'demo', 'plans': d, 'today': [today.year, today.month, today.day]}
+    return {'user': { 'user_id': 'demo' }, 'plans': d}
 
 if __name__ == '__main__':
     print(generate_data())
