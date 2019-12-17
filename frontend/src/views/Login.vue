@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class='login'>
     <h1>Log In</h1>
   <form action="/api/login?redirect=/login" method="POST">
     <label for="username">
@@ -21,3 +21,11 @@
   </form>
   </div>
 </template>
+
+<style scoped>
+  .login {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 20px;
+  }
+</style>

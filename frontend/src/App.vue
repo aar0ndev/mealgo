@@ -1,9 +1,10 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{home: !logged_in}">
     <header id="nav">
       <span id="home">
-        <router-link to="/">MealGo</router-link>
+        <router-link to="/" class="logo">MealGo</router-link>
       </span>
+      <span id="links">
       <template v-if="logged_in">
         <router-link to="/planner">Planner</router-link>
         <router-link to="/recipes">Recipes</router-link>
@@ -13,6 +14,7 @@
         <router-link to="/signup">Sign Up</router-link>
         <router-link to="/login">Log In</router-link>
       </template>
+      </span>
     </header>
     <section id="content">
       <router-view />
@@ -24,10 +26,15 @@
 </template>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
+  min-height: 100vh;
 }
 
 #app {
@@ -37,18 +44,23 @@ body {
   color: #2c3e50;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-flow: stretch;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 #content {
-  min-height: 80vh;
-  padding-left: 20px;
+  xmin-height: 80vh;
+  xpadding-left: 20px;
+  flex-grow: 1;
 }
 
 #nav {
   display: flex;
+  width: 100%;
 }
 
-#content,
 #nav {
   max-width: 1200px;
   margin: 0 auto;
@@ -57,6 +69,7 @@ body {
 #nav,
 #footer {
   padding: 0 0 0 20px;
+  flex-grow: 0;
 }
 
 #nav a {
@@ -64,7 +77,7 @@ body {
   color: #2c3e50;
 }
 
-#nav > a {
+#nav a {
   padding-left: 10px;
   padding-right: 10px;
 }
@@ -110,4 +123,19 @@ button {
   font-size: 24px;
   line-height: 24px;
 }
+
+@media (max-width: 550px) { #nav {flex-direction: column} #links {display: flex;} #links a { flex-grow: 1}}
+
+#app.home {
+  background: linear-gradient(#DFF 0%, #fff 30%);
+}
+
+a.logo {
+  text-decoration: none;
+  }
+
+a {
+  xoutline: 1px dashed brown;
+}
+
 </style>
