@@ -12,7 +12,7 @@
        <p>Planning meals leads to eating better since you are more in control of you diet</p>
      </div>
      <div class="box">
-       <h2>Easier Shopping</h2>
+       <h2>Shop Easier</h2>
        <p>Helpful dynamic shopping list can be shared and synced across multiple users</p>
      </div>
      </div>
@@ -28,8 +28,7 @@ export default {
 
 <style scoped>
 .home {
-  max-width: 1200px;
-  margin: 0 auto;
+  color: #444;
 }
 
 .boxes{
@@ -40,9 +39,11 @@ export default {
   flex-grow: 1;
   flex-basis: 0;
   margin: 20px;
-  border: 1px solid #888;
+  border: 1px solid #CCC;
   border-radius: 5px;
   padding: 10px;
+  box-shadow: 0 3px 10px #BBB;
+  font-size: 11pt;
 }
 
 @media (max-width: 650px) {
