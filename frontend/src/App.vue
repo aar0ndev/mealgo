@@ -106,7 +106,7 @@ button {
   padding: 20px;
   min-height: 200px;
   background: #222;
-  color: #888;
+  color: #999;
   font-size: 10pt;
 }
 
