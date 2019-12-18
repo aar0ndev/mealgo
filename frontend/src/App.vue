@@ -5,15 +5,15 @@
         <router-link to="/" class="logo">MealGo</router-link>
       </span>
       <span id="links">
-      <template v-if="logged_in">
-        <router-link to="/planner">Planner</router-link>
-        <router-link to="/recipes">Recipes</router-link>
-        <router-link to="/shopping">Shopping List</router-link>
-      </template>
-      <template v-else>
-        <router-link to="/signup">Sign Up</router-link>
-        <router-link to="/login">Log In</router-link>
-      </template>
+        <template v-if="logged_in">
+          <router-link to="/planner">Planner</router-link>
+          <router-link to="/recipes">Recipes</router-link>
+          <router-link to="/shopping">Shopping List</router-link>
+        </template>
+        <template v-else>
+          <router-link to="/signup">Sign Up</router-link>
+          <router-link to="/login">Log In</router-link>
+        </template>
       </span>
     </header>
     <section id="content">
@@ -51,8 +51,6 @@ body {
 }
 
 #content {
-  xmin-height: 80vh;
-  xpadding-left: 20px;
   flex-grow: 1;
 }
 
@@ -90,7 +88,6 @@ a {
   display: inline-block;
   min-width: 48px;
   min-height: 48px;
-  xoutline: 1px dashed;
   box-sizing: border-box;
   line-height: 48px;
   color: #2f3781;
@@ -124,18 +121,23 @@ button {
   line-height: 24px;
 }
 
-@media (max-width: 550px) { #nav {flex-direction: column} #links {display: flex;} #links a { flex-grow: 1}}
+@media (max-width: 550px) {
+  #nav {
+    flex-direction: column;
+  }
+  #links {
+    display: flex;
+  }
+  #links a {
+    flex-grow: 1;
+  }
+}
 
 #app.home {
-  background: linear-gradient(#DFF 0%, #fff 30%);
+  background: linear-gradient(#dff 0%, #fff 30%);
 }
 
 a.logo {
   text-decoration: none;
-  }
-
-a {
-  xoutline: 1px dashed brown;
 }
-
 </style>

@@ -8,6 +8,6 @@
 <script>
 import ShoppingList from '@/components/ShoppingList.vue'
 export default {
-    components: {ShoppingList}
+  components: { ShoppingList }
 }
 </script>

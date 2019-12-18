@@ -1,31 +1,31 @@
 <template>
-<div class='login'>
+  <div class="login">
     <h1>Log In</h1>
-  <form action="/api/login?redirect=/login" method="POST">
-    <label for="username">
-      Email
+    <form action="/api/login?redirect=/login" method="POST">
+      <label for="username">
+        Email
+        <br />
+        <input id="username" name="username" type="text" />
+      </label>
       <br />
-      <input id="username" name="username" type="text" />
-    </label>
-    <br />
-    <label for="password">
-      Password
+      <label for="password">
+        Password
+        <br />
+        <input id="password" name="password" type="password" />
+      </label>
       <br />
-      <input id="password" name="password" type="password" />
-    </label>
-    <br />
-    <button type="submit">Log In</button>
-    <br />
-    <a href="/planner">Use as Guest</a>
-    <br />
-  </form>
+      <button type="submit">Log In</button>
+      <br />
+      <a href="/planner">Use as Guest</a>
+      <br />
+    </form>
   </div>
 </template>
 
 <style scoped>
-  .login {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding-left: 20px;
-  }
+.login {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 20px;
+}
 </style>
