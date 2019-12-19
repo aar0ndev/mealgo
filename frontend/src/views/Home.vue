@@ -100,9 +100,10 @@ export default {
   margin: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  padding: 10px;
+  padding: 30px;
   box-shadow: 0 3px 10px #bbb;
   font-size: 11pt;
+  background: white;
 }
 
 @media (max-width: 650px) {

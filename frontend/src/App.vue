@@ -1,23 +1,27 @@
 <template>
   <div id="app" :class="{home: !logged_in}">
     <header id="nav">
-      <span id="home">
-        <router-link to="/" class="logo">MealGo</router-link>
-      </span>
-      <span id="links">
-        <template v-if="logged_in">
-          <router-link to="/planner">Planner</router-link>
-          <router-link to="/recipes">Recipes</router-link>
-          <router-link to="/shopping">Shopping List</router-link>
-        </template>
-        <template v-else>
-          <router-link to="/signup">Sign Up</router-link>
-          <router-link to="/login">Log In</router-link>
-        </template>
-      </span>
+      <div id="nav-container">
+        <span id="home">
+          <router-link to="/" class="logo">MealGo</router-link>
+        </span>
+        <span id="links">
+          <template v-if="logged_in">
+            <router-link to="/planner">Planner</router-link>
+            <router-link to="/recipes">Recipes</router-link>
+            <router-link to="/shopping">Shopping List</router-link>
+          </template>
+          <template v-else>
+            <router-link to="/signup">Sign Up</router-link>
+            <router-link to="/login">Log In</router-link>
+          </template>
+        </span>
+      </div>
     </header>
     <section id="content">
-      <router-view />
+      <transition name="fade">
+        <router-view />
+      </transition>
     </section>
     <footer id="footer">
       <div class="copyright">&copy; 2019 MealGo.app</div>
@@ -35,6 +39,7 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  background: #fff;
 }
 
 #app {
@@ -50,21 +55,22 @@ body {
   min-height: 100vh;
 }
 
+#nav {
+  background: linear-gradient(#eff, #dff);
+}
+
 #content {
   flex-grow: 1;
 }
 
-#nav {
+#nav-container {
   display: flex;
   width: 100%;
-}
-
-#nav {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-#nav,
+#nav-container,
 #footer {
   padding: 0 0 0 20px;
   flex-grow: 0;
@@ -105,11 +111,12 @@ button {
   background: #222;
   color: #999;
   font-size: 10pt;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 #footer .copyright {
-  line-height: 3em;
-  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -122,10 +129,10 @@ button {
 }
 
 @media (max-width: 550px) {
-  #nav {
+  #links {
     flex-direction: column;
   }
-  #links {
+  #nav-container {
     display: flex;
   }
   #links a {
@@ -133,11 +140,21 @@ button {
   }
 }
 
-#app.home {
-  background: linear-gradient(#dff 0%, #fff 30%);
-}
-
 a.logo {
   text-decoration: none;
+}
+
+.fade-leave-active {
+  position: absolute;
+  width: 100%;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 300ms;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+  transition: opacity 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 </style>
