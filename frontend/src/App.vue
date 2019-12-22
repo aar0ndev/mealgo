@@ -24,7 +24,7 @@
       </transition>
     </section>
     <footer id="footer">
-      <div class="copyright">&copy; 2019 MealGo.app</div>
+      <div class="copyright">&copy; 2019 <a href="//theaaron.dev">theaaron.dev</a></div>
     </footer>
   </div>
 </template>
@@ -72,7 +72,7 @@ body {
 
 #nav-container,
 #footer {
-  padding: 0 0 0 20px;
+  padding: 0 20px;
   flex-grow: 0;
 }
 
@@ -82,8 +82,8 @@ body {
 }
 
 #nav a {
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
 #nav a.router-link-exact-active {
@@ -99,9 +99,28 @@ a {
   color: #2f3781;
 }
 
-button {
+button,
+.primary {
   min-width: 48px;
   min-height: 48px;
+  padding: 5px 20px;
+  border-radius: 5px;
+  font-size: 1.1em;
+  border: 1px solid black;
+  background: white;
+}
+
+.primary {
+  color: #dff;
+  background: rgb(2, 141, 141);
+  border: 2px solid rgb(100, 141, 141);
+  text-decoration: none;
+  font-size: 24px;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+}
+
+#footer, #footer a {
+  color: #999;
 }
 
 #footer {
@@ -109,7 +128,7 @@ button {
   padding: 20px;
   min-height: 200px;
   background: #222;
-  color: #999;
+
   font-size: 10pt;
   display: flex;
   flex-direction: column;
@@ -155,6 +174,23 @@ a.logo {
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0;
-  transition: opacity 300ms cubic-bezier(0.075, 0.82, 0.165, 1);
+  transition: opacity 200ms;
+}
+
+label > input {
+  xoutline: 1px solid red;
+  margin: 10px 0 30px 0;
+  font-size: 1em;
+  width: 100%;
+  border-radius: 5px;
+  padding: 6px;
+}
+
+a {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 </style>

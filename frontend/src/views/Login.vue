@@ -15,7 +15,7 @@
           <input id="password" name="password" type="password" />
         </label>
         <br />
-        <button type="submit">Log In</button>
+        <button class="primary" type="submit">Log In</button>
         <br />
         <a href="/planner">Use as Guest</a>
         <br />
@@ -28,6 +28,10 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding-left: 20px;
+  padding: 0 40px;
+}
+
+form {
+  max-width: 500px;
 }
 </style>

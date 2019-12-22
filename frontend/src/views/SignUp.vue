@@ -21,10 +21,11 @@
           <input id="password2" name="password2" type="password" />
         </label>
         <br />
-        <p>
+        <button type="submit" class="primary">Sign Up</button>
+        <div>
           Already a member?
-          <router-link to="login">Log In</router-link>instead.
-        </p>
+          <router-link to="login">Log In</router-link>
+        </div>
         <a href="/planner">Use as Guest</a>
         <br />
       </form>
@@ -36,6 +37,10 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding-left: 20px;
+  padding: 0 40px;
+}
+
+form {
+  max-width: 500px;
 }
 </style>
