@@ -59,6 +59,7 @@ export default {
 .banner {
   position: relative;
   background: linear-gradient(#dff -10%, #cff 100%);
+  z-index: 2;
 }
 
 .banner .container {
@@ -120,6 +121,7 @@ export default {
   max-width: 1200px;
   margin: -20px auto;
   padding: 0 20px;
+  background: white;
 }
 .box {
   flex-grow: 1;
@@ -137,6 +139,7 @@ export default {
   text-align: center;
   padding: 70px 0;
   position: relative;
+  background: white;
 }
 
 @media (max-width: 650px) {
