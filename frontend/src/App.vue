@@ -29,6 +29,16 @@
   </div>
 </template>
 
+<script>
+export default {
+  data () {
+    return {
+      logged_in: false
+    }
+  }
+}
+</script>
+
 <style>
 * {
   box-sizing: border-box;
