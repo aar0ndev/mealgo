@@ -37,7 +37,7 @@ export default {
   components: { InlineSvg },
   methods: {
     getSwoosh () {
-      return require('!svg-inline-loader!@/assets/swoosh.svg')
+      return require('@/assets/swoosh.svg?inline')
     }
   }
 }
@@ -74,7 +74,7 @@ export default {
   flex-basis: 1;
   flex-shrink: 1;
   width: 50%;
-  background: url(../assets/quick-cart.svg);
+  background: url(../assets/quick-cart.svg?url);
   background-repeat: no-repeat;
   background-origin: 50% 50%;
   background-position: 50% 50%;
