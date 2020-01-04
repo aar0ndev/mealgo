@@ -46,14 +46,14 @@ export default {
   },
   methods: {
     isToday (date) {
-      return !!this.today && this.today.getDate() == date.getDate() &&
-      this.today.getMonth() == date.getMonth() &&
-      this.today.getFullYear() == date.getFullYear()
+      return !!this.today && this.today.getDate() === date.getDate() &&
+      this.today.getMonth() === date.getMonth() &&
+      this.today.getFullYear() === date.getFullYear()
     },
     isSelected (date) {
-      return !!this.selected && this.selected.getDate() == date.getDate() &&
-      this.selected.getMonth() == date.getMonth() &&
-      this.selected.getFullYear() == date.getFullYear()
+      return !!this.selected && this.selected.getDate() === date.getDate() &&
+      this.selected.getMonth() === date.getMonth() &&
+      this.selected.getFullYear() === date.getFullYear()
     },
     changeWeek (num) {
       this.start = new Date(this.start.getFullYear(), this.start.getMonth(), this.start.getDate() + num * 7)

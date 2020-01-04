@@ -19,7 +19,7 @@
 import Calendar from '@/components/Calendar.vue'
 import SearchInput from '@/components/SearchInput.vue'
 import AddMealInput from '@/components/AddMealInput.vue'
-import {generateID} from '@/util.js'
+import { generateID } from '@/util.js'
 export default {
   components: { Calendar, SearchInput, AddMealInput },
   data () {
@@ -43,40 +43,39 @@ export default {
     }
   },
   watch: {
-    meals() {
+    meals () {
       localStorage.setItem('meals', JSON.stringify(this.meals))
     }
   },
   methods: {
-    addMeal(meal) {
-      var newMeal = {...meal, date: this.dateString, uid: generateID()}
+    addMeal (meal) {
+      var newMeal = { ...meal, date: this.dateString, uid: generateID() }
       this.meals = [...this.meals, newMeal]
       this.searchVisible = false
     },
-    addNewMeal(mealName) {
-      this.addMeal({text: mealName})
+    addNewMeal (mealName) {
+      this.addMeal({ text: mealName })
       this.addVisible = false
     },
-    removeMeal(meal) {
+    removeMeal (meal) {
       this.meals = this.meals.filter(m => m.uid !== meal.uid)
     },
-    editMeal(meal) {
+    editMeal (meal) {
       if (this.editMealUid === '') return
       this.editMealUid = ''
       if (meal.text === this.editMealName) return
       meal.text = this.editMealName
       this.meals = [...this.meals]
     },
-    startEditMeal(meal) {
+    startEditMeal (meal) {
       this.editMealUid = meal.uid
       this.editMealName = meal.text
-      const self = this
-      this.$nextTick(() => setTimeout(() => this.$refs['editMealInput-'+meal.uid][0].focus(), 10))
+      this.$nextTick(() => setTimeout(() => this.$refs['editMealInput-' + meal.uid][0].focus(), 10))
     }
   },
-  mounted() {
-    const self = this;
-    fetch('/data/meals.json').then(res => res.ok ? res.json(): {meals:[]}).then(data => self.allMeals = data.meals)
+  mounted () {
+    const self = this
+    fetch('/data/meals.json').then(res => res.ok ? res.json() : { meals: [] }).then(data => { self.allMeals = data.meals })
     this.meals = JSON.parse(localStorage.getItem('meals') || '[]')
   }
 }

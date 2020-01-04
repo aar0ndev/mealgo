@@ -6,28 +6,28 @@
 
 <script>
 export default {
-    props: {
-        focus: { type: Boolean, default: false }
-    },
-    data() {
-        return {
-            value: '',
-        }
-    },
-    methods: {
-        focusInput() {
-            this.$refs.input.focus()
-        },
-        sendResult() {
-            this.$emit("change", this.value)
-        },
-        onBlur() {
-            this.$emit("cancel")
-        }
-    },
-    mounted() {
-        if (this.focus) this.focusInput()
+  props: {
+    focus: { type: Boolean, default: false }
+  },
+  data () {
+    return {
+      value: ''
     }
+  },
+  methods: {
+    focusInput () {
+      this.$refs.input.focus()
+    },
+    sendResult () {
+      this.$emit('change', this.value)
+    },
+    onBlur () {
+      this.$emit('cancel')
+    }
+  },
+  mounted () {
+    if (this.focus) this.focusInput()
+  }
 }
 </script>
 
