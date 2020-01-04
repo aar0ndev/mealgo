@@ -17,7 +17,7 @@
         <br />
         <button class="primary" type="submit">Log In</button>
         <br />
-        <a href="/planner">Use as Guest</a>
+        <router-link to="planner">Use as Guest</router-link>
         <br />
       </form>
     </div>

@@ -26,7 +26,7 @@
           Already a member?
           <router-link to="login">Log In</router-link>
         </div>
-        <a href="/planner">Use as Guest</a>
+        <router-link to="planner">Use as Guest</router-link>
         <br />
       </form>
     </div>
