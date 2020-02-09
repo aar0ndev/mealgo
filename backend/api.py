@@ -38,5 +38,5 @@ def init_app(app):
         return {'user': 'info here'}
 
     @app.route('/demo')
-    def index():
+    def demo_index():
         return demo.generate_data()
