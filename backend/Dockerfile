@@ -1,8 +1,9 @@
-FROM python:3.7
+FROM python:3.8
 COPY . /app
 WORKDIR /app
-RUN pip install -r requirements.txt
-ENV FLASK_APP=/app/index.py
+RUN pip install pipenv
+RUN pipenv install --system --deploy --ignore-pipfile
+ENV FLASK_APP=/app/app.py
 ENV FLASK_ENV=development
 ENV FLASK_DEBUG=1
 EXPOSE 5000

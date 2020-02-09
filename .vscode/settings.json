@@ -1,3 +1,10 @@
 {
-    "python.pythonPath": "C:\\Program Files\\Python37\\python.exe"
+    "python.pythonPath": "C:\\Users\\Aaron\\.virtualenvs\\mealgo-99g3LM5_\\Scripts\\python.exe",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.formatting.provider": "black",
+    "editor.formatOnSave": true,
+    "python.formatting.blackArgs": [
+        "--single-quotes"
+    ]
 }
