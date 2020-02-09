@@ -13,12 +13,15 @@ services:
       - 8080:80
     depends_on: 
       - api
-   depends_on: 
-       - db
- db:
-   image: mongo:4.2.1
-   ports:
-       - 27017:27017
-   volumes:
-       - /db:/data/db
-    
+    depends_on: 
+      - db
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8089:8080
