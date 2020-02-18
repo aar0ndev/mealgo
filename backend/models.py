@@ -1,13 +1,18 @@
-from flask_sqlalchemy import SQLAlchemy
-from .util import SerializableModel
+from util import SerializableModel
 from flask_security import RoleMixin, UserMixin
+from db import db
 
-db = SQLAlchemy()
 
 roles_users = db.Table(
     'roles_users',
     db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
     db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
+)
+
+plans_users = db.Table(
+    'plans_users',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('plan_id', db.Integer(), db.ForeignKey('plan.id')),
 )
 
 
@@ -17,9 +22,9 @@ class Role(db.Model, RoleMixin):
     description = db.Column(db.String(255))
 
 
-class User(db.Model, UserMixin, SerializableModel):
+class User(SerializableModel, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    alias = db.Column(db.String(128), nullable=True)
+    alias = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean())
@@ -29,5 +34,16 @@ class User(db.Model, UserMixin, SerializableModel):
     )
 
 
-if __name__ == '__main__':
-    pass
+class Meal(SerializableModel, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    plan_id = db.Column(db.Integer, db.ForeignKey('plan.id'))
+
+
+class Plan(SerializableModel, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    users = db.relationship(
+        'User', secondary=plans_users, backref=db.backref('plans', lazy='dynamic')
+    )
+    meals = db.relationship('Meal', backref=db.backref('plan'))

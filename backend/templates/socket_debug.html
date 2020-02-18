@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>Echo Test</h1>
+    <div>
+        <button id="connect" onclick="connect()">Connect</button>
+    </div>
+    <div>
+        Status: <span id="status"> Not Connected </span>
+    </div>
+    <div><input id="input" type="text" placeholder="type something here..." disabled /></div>
+    <div><textarea id="output" placeholder="see something here..." disabled></textarea></div>
+    <script>{% include 'socket.debug.js' %}</script>
+</body>
+
+</html>

@@ -50,49 +50,78 @@
 
 ## Architecture
 
-Front end (container) - Vue.js
-Back end (container) - Python / ~~Django API~~ Flask
+Front end - Vue.js SPA
+Back end - Flask API
 
 ### Database
 
-Mealgo will use a no-SQL database to aid flexibility and ease horizontal scaling. MongoDB is chosen due to popularity and my personal need to learn it.
+Mealgo will use PostgreSQL database for simplicity and ease of development.
 
 #### Entities
 
+**PHASE I**
+
 > **User**
-> * id
 > * email
-
-> **Recipe**
-> * id
 > * name
-> * ingredients
->   - { id, order, qty, have }
+> * plans (backref)
 
-> **Ingredient**
-> * id
+> **Plan**
 > * name
+> * users (backref)
+> * meals (backref)
+
+> **UserPlan**
+> * user (fk)
+> * plan (fk)
+> * date_created
+> * role (fk)
 
 > **Meal**
-> * id
 > * name
-> * recipes
->   - { id, order }
+> * plan (fk)
+> * date
+> * time
+> * recipes (backref)
 
-> **WeekPlan**
-> * id
-> * name?
-> * week
-> * days
->   - { id }
+**PHASE II**
 
-> **DayPlan**
-> * id
-> * day
-> * meals
->   - { id, order }
+> **Recipe**
+> * name
+> * url (opt)
+> * ingredients (opt)
+> * meals (backref)
 
-> **ShopList**
-> * id
-> * ingredients
->   - { id, order }
+> **MealRecipe**
+> * meal (fk)
+> * recipe (fk)
+
+> **Ingredient**
+> * name
+> * recipes (backref)
+> * unit (opt)
+> * calories (opt)
+> * fat (opt)
+> * protein (opt)
+> * carbs (opt)
+
+> **RecipeIngredient**
+> * recipe (fk)
+> * ingredient (fk)
+
+**PHASE III**
+
+> **ShoppingList**
+> * planner
+> * start_date
+> * end_date
+> * items (backref)
+> * date_created
+> * date_modified
+
+> **ShopListItem**
+> * name
+> * unit
+> * checked
+> * date_added
+> * shopping_list (fk)

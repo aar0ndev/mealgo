@@ -1,23 +1,21 @@
-from .models import db, User
-from . import demo
-import json
 import html
+import json
 import random
+
+from flask import abort, render_template, request
 from flask_security import auth_token_required
+from flask_security.core import current_user
 from flask_security.utils import login_user, verify_password
-from flask import abort, request
+
+import demo
+from models import Meal, Plan, User
 
 
-def init_app(app):
-    @app.after_request
-    def clear_server_header(response):
-        response.headers['Server'] = ''
-        return response
-
+def init_app(app, db):
     @app.route('/')
     def index():
         users = User.query.all()
-        return json.dumps([u.to_dict() for u in users])
+        return json.dumps([repr(u) for u in users])
 
     @app.route('/login', methods=['POST'])
     def login():
@@ -31,12 +29,45 @@ def init_app(app):
             return u.get_auth_token()
         return abort(401)
 
+    # @auth_token_required
     @app.route('/userinfo')
-    @auth_token_required
     def userinfo():
+        info = current_user.to_dict() if not current_user.is_anonymous else None
+        return {'user': info}
 
-        return {'user': 'info here'}
+    # @auth_token_required
+    @app.route('/plans')
+    def plans():
+        try:
+            user_id = 1
+            if not current_user.is_anonymous:
+                user_id = current_user.id
+
+            user = db.session.query(User).get(user_id)
+            plans = user.plans.all()
+
+            meals = [meal.to_dict() for plan in plans for meal in plans]
+
+            return {'plans': [plan.to_dict() for plan in plans], 'meals': meals}
+        except Exception as e:
+            return {'error': str(e)}
+
+    # @app.route('/usermeals/<int:id>')
+    # def usermeals(id):
+    #     return {'meals': meals_for_user(id)}
 
     @app.route('/demo')
     def demo_index():
         return demo.generate_data()
+
+    # TODO: limit message sizes, ensure auth only
+    @app.sockets.route('/echo')
+    def echo_socket(ws):
+        while not ws.closed:
+            message = ws.receive()
+            if not ws.closed:
+                ws.send(message)
+
+    @app.route('/debug')
+    def debug():
+        return render_template('socket_debug.html')

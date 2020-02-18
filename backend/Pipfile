@@ -6,6 +6,9 @@ verify_ssl = true
 [dev-packages]
 pylint = "*"
 black = {editable = true,git = "https://github.com/aar0ndev/black-single-quote",ref = "single-quote"}
+pytest = "*"
+requests = "*"
+ptvsd = "*"
 
 [packages]
 flask = "*"
@@ -14,6 +17,9 @@ flask-security = "*"
 psycopg2 = "*"
 python-dateutil = "*"
 bcrypt = "*"
+flask-sockets = "*"
+gunicorn = "*"
+ptvsd = "*"
 
 [requires]
 python_version = "3.8"

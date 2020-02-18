@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "C:\\Users\\Aaron\\.virtualenvs\\mealgo-99g3LM5_\\Scripts\\python.exe",
+    "python.pythonPath": "C:\\Users\\Aaron\\.virtualenvs\\backend-AkO7J_-l\\Scripts\\python.exe",
     "python.linting.pylintEnabled": true,
     "python.linting.enabled": true,
     "python.formatting.provider": "black",

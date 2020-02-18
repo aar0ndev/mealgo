@@ -1,6 +1,6 @@
-from .app import create_app
-from .models import db
-from .util import ArgParser
+from app import create_app
+from models import db
+from util import ArgParser
 
 
 def db_create_all():

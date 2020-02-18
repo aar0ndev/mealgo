@@ -5,7 +5,7 @@ services:
         context: backend
     ports:
         - 5000:5000
-    volumes: ['./backend:/app']
+    volumes: ['./backend:/app', './backend/.cache:/root/.cache/pip']
   app:
     build:
       context: frontend

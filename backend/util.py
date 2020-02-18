@@ -1,3 +1,12 @@
+def _check_col(column):
+    column_name = str(column)
+    BAD_WORDS = ['pass']
+    for word in BAD_WORDS:
+        if word in column_name:
+            return False
+    return True
+
+
 class SerializableModel:
     """ A general serialization scheme for SQLAlchemy models.
 
@@ -30,10 +39,17 @@ class SerializableModel:
     """
 
     def to_dict(self):
-        return {col.name: getattr(self, col.name) for col in self.__table__.columns}
+        return {
+            col.name: getattr(self, col.name)
+            for col in self.__table__.columns
+            if _check_col(col)
+        }
 
     def __repr__(self):
-        return self.__class__.__name__ + f'(id={self.id})'
+        return (
+            self.__class__.__name__
+            + f'({", ".join([f"{key}={repr(getattr(self,key))}" for key in self.to_dict()])})'
+        )
 
 
 class ArgParser:
