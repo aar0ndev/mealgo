@@ -31,9 +31,7 @@
 
 .hide {
   opacity: 0;
-  /*visibility: hidden;*/
   transition: opacity 0.5s;
-  transition: visibility 0 0.5;
 }
 
 .spinner {
@@ -57,25 +55,25 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      dots: ""
-    };
+      dots: ''
+    }
   },
   watch: {
-    "$global.waiting": function() {
+    '$global.waiting': function () {
       if (!this.interval) {
-        this.dots = "";
+        this.dots = ''
         this.interval = setInterval(() => {
-          this.dots = this.dots === "..." ? "" : this.dots + ".";
+          this.dots = this.dots === '...' ? '' : this.dots + '.'
 
           if (!this.$global.waiting) {
-            clearInterval(this.interval);
-            this.interval = null;
+            clearInterval(this.interval)
+            this.interval = null
           }
-        }, 500);
+        }, 500)
       }
     }
   }
-};
+}
 </script>

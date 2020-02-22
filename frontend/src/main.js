@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 Vue.prototype.$api = api
 
 Vue.prototype.$global = new Vue({
-  data() {
+  data () {
     return {
       loggedIn: false,
       waiting: false
@@ -25,5 +25,5 @@ api.setup(vm)
 vm.$mount('#app')
 
 router.afterEach((toRoute, fromRoute) => {
-  vm.$global.waiting = false;
+  vm.$global.waiting = false
 })

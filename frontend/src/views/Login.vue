@@ -38,30 +38,30 @@ form {
 
 <script>
 export default {
-  data() {
+  data: function () {
     return {
-      email: "",
-      pass: ""
-    };
+      email: '',
+      pass: ''
+    }
   },
   methods: {
-    async login(ev) {
-      ev.preventDefault();
+    async login (ev) {
+      ev.preventDefault()
       try {
-        await this.$api.login(this.email, this.pass);
-        this.$global.loggedIn = true;
-        this.$router.push("planner");
+        await this.$api.login(this.email, this.pass)
+        this.$global.loggedIn = true
+        this.$router.push('planner')
       } catch (err) {
         // if 401 error, say something like wrong password
         // if other error, say so
-        console.log(err);
-        if (err.message.includes("UNAUTHORIZED")) {
-          window.alert("Incorrect username or password. Please try again.");
+        console.log(err)
+        if (err.message.includes('UNAUTHORIZED')) {
+          window.alert('Incorrect username or password. Please try again.')
         } else {
-          window.alert("Error logging in, please try again later.");
+          window.alert('Error logging in, please try again later.')
         }
       }
     }
   }
-};
+}
 </script>

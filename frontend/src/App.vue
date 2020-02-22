@@ -43,22 +43,22 @@
 </template>
 
 <script>
-import WaitingSpinner from "@/components/WaitingSpinner.vue";
+import WaitingSpinner from '@/components/WaitingSpinner.vue'
 
 export default {
   components: {
     WaitingSpinner
   },
-  data() {
-    return {};
+  data () {
+    return {}
   },
   methods: {
-    logout() {
-      //debugger;
-      this.$api.logout();
+    logout () {
+      // debugger;
+      this.$api.logout()
     }
   }
-};
+}
 </script>
 
 <style>
@@ -80,7 +80,7 @@ body {
 }
 
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
@@ -153,7 +153,7 @@ button,
   border: 2px solid rgb(100, 141, 141);
   text-decoration: none;
   font-size: 24px;
-  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 #footer,
