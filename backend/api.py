@@ -17,7 +17,7 @@ def init_app(app, db):
         users = User.query.all()
         return json.dumps([repr(u) for u in users])
 
-    @app.route('/login', methods=['POST'])
+    @app.route('/api/login', methods=['POST'])
     def login():
         login_data = request.get_json(cache=False)
         email = login_data['email']

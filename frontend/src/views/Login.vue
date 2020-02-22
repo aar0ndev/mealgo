@@ -6,16 +6,16 @@
         <label for="username">
           Email
           <br />
-          <input id="username" name="username" type="text" />
+          <input v-model="email" id="email" name="email" type="text" />
         </label>
         <br />
         <label for="password">
           Password
           <br />
-          <input id="password" name="password" type="password" />
+          <input v-model="pass" id="password" name="password" type="password" />
         </label>
         <br />
-        <button class="primary" type="submit">Log In</button>
+        <button class="primary" @click="login" type="submit">Log In</button>
         <br />
         <router-link to="planner">Use as Guest</router-link>
         <br />
@@ -35,3 +35,33 @@ form {
   max-width: 500px;
 }
 </style>
+
+<script>
+export default {
+  data() {
+    return {
+      email: "",
+      pass: ""
+    };
+  },
+  methods: {
+    async login(ev) {
+      ev.preventDefault();
+      try {
+        await this.$api.login(this.email, this.pass);
+        this.$global.loggedIn = true;
+        this.$router.push("planner");
+      } catch (err) {
+        // if 401 error, say something like wrong password
+        // if other error, say so
+        console.log(err);
+        if (err.message.includes("UNAUTHORIZED")) {
+          window.alert("Incorrect username or password. Please try again.");
+        } else {
+          window.alert("Error logging in, please try again later.");
+        }
+      }
+    }
+  }
+};
+</script>

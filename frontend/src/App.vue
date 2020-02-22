@@ -1,15 +1,24 @@
 <template>
-  <div id="app" :class="{home: !logged_in}">
+  <div id="app" :class="{home: !$global.loggedIn}">
     <header id="nav">
       <div id="nav-container">
         <span id="home">
+          <div class="debug">
+            loggedIn
+            <input type="checkbox" v-model="$global.loggedIn" />
+            waiting
+            <input type="checkbox" v-model="$global.waiting" />
+          </div>
           <router-link to="/" class="logo">MealGo</router-link>
         </span>
         <span id="links">
-          <template v-if="logged_in">
+          <template v-if="$global.loggedIn">
             <router-link to="/planner">Planner</router-link>
             <router-link to="/recipes">Recipes</router-link>
             <router-link to="/shopping">Shopping List</router-link>
+            <router-link to="/login">
+              <span @click="logout">Log Out</span>
+            </router-link>
           </template>
           <template v-else>
             <router-link to="/signup">Sign Up</router-link>
@@ -24,24 +33,42 @@
       </transition>
     </section>
     <footer id="footer">
-      <div class="copyright">&copy; 2019 <a href="//theaaron.dev">theaaron.dev</a></div>
+      <div class="copyright">
+        &copy; 2019
+        <a href="//theaaron.dev">theaaron.dev</a>
+      </div>
     </footer>
+    <WaitingSpinner />
   </div>
 </template>
 
 <script>
+import WaitingSpinner from "@/components/WaitingSpinner.vue";
+
 export default {
-  data () {
-    return {
-      logged_in: false
+  components: {
+    WaitingSpinner
+  },
+  data() {
+    return {};
+  },
+  methods: {
+    logout() {
+      //debugger;
+      this.$api.logout();
     }
   }
-}
+};
 </script>
 
 <style>
 * {
   box-sizing: border-box;
+}
+
+html {
+  overflow-y: scroll;
+  cursor: default;
 }
 
 html,
@@ -129,7 +156,8 @@ button,
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
 }
 
-#footer, #footer a {
+#footer,
+#footer a {
   color: #999;
 }
 
@@ -155,6 +183,7 @@ button,
   flex-grow: 1;
   font-size: 24px;
   line-height: 24px;
+  position: relative;
 }
 
 @media (max-width: 550px) {
@@ -202,5 +231,13 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+.debug {
+  position: absolute;
+  left: 20px;
+  top: 50px;
+  font-size: 15px;
+  line-height: 1em;
+  z-index: 20;
 }
 </style>
