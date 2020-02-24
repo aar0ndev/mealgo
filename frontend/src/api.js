@@ -7,17 +7,22 @@ async function request (url, body = null, method = 'GET', headers = {}, wait = t
     state.$global.waiting = true
   }
   try {
-    var res = await fetch(
-      url, {
-        headers: {
-          'Authorization': localStorage.getItem('api-token'),
-          'Accept': 'application/json',
-          'Content-Type': 'application/json;charset=UTF-8',
-          ...headers
-        },
-        body: JSON.stringify(body),
-        method
-      })
+    var opts = {
+      headers: {
+        'Authorization': localStorage.getItem('api-token'),
+        'Accept': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
+        ...headers
+      },
+
+      method
+    }
+
+    if (method === 'POST') {
+      opts.body = JSON.stringify(body)
+    }
+
+    var res = await fetch(url, opts)
 
     if (res.ok) {
       return res.json()
@@ -53,12 +58,13 @@ export default {
     state.$global.loggedIn = false
   },
   async get (type, id = null) {
+    // debugger
     try {
-      var res = await request(`/api/${type}` + id ? `/${id}` : '')
-      return res.json()
+      var res = await request(`/api/${type}` + (id ? `/${id}` : ''))
+      return res
     } catch (err) {
       // todo: handle auth errors
-      throw new Error(`${res.status} (${res.statusText})`)
+      throw new Error(`${err.res.status} (${err.res.statusText})`)
     }
   },
   setup (vm) {

@@ -10,5 +10,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"vetur.format.defaultFormatter.js": "prettier-eslint"
+	}
 }

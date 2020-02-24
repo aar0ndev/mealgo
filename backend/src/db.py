@@ -1,6 +1,9 @@
+import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 import sqlalchemy as sa
 from flask_security.utils import hash_password
+
 
 db = SQLAlchemy()
 
@@ -8,9 +11,11 @@ db = SQLAlchemy()
 def init_app(app):
     from models import Meal, Plan, Role, User
 
-    app.config[
-        'SQLALCHEMY_DATABASE_URI'
-    ] = 'postgres+psycopg2://postgres:postgres@db/postgres'
+    # app.config[
+    #    'SQLALCHEMY_DATABASE_URI'
+    # ] = 'postgres+psycopg2://postgres:postgres@db/postgres'
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -32,7 +37,12 @@ def init_app(app):
                     email='user@test.com',
                     password=hash_password('password'),
                 )
-                plan = Plan(name='dummy', users=[user])
-                meal = Meal(name='dummy', plan=plan)
+                plan = Plan(name='dummy plan', users=[user])
+                meal = Meal(
+                    name='dummy meal',
+                    created_date=datetime.datetime.utcnow(),
+                    planned_date=datetime.datetime.utcnow(),
+                    plan=plan,
+                )
                 db.session.add(meal)
                 db.session.commit()

@@ -1,5 +1,6 @@
 from flask import Flask
-from flask_sockets import Sockets
+
+# from flask_sockets import Sockets
 
 import api
 import db
@@ -8,7 +9,7 @@ import security
 
 def create_app():
     app = Flask(__name__)
-    app.sockets = Sockets(app)
+    # app.sockets = Sockets(app)
     app.config['DEBUG'] = True
     app.config['SECRET_KEY'] = 'super-secret'
     db.init_app(app)
@@ -26,11 +27,11 @@ def create_app():
 app = create_app()
 
 if __name__ == '__main__':
-    # app = create_app()
-    from gevent import pywsgi
-    from geventwebsocket.handler import WebSocketHandler
 
-    server = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
-    print('serving4eva')
-    server.serve_forever()
-    # app.run(debug=True)
+    # from gevent import pywsgi
+    # from geventwebsocket.handler import WebSocketHandler
+
+    # server = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+    # print('serving4eva')
+    # server.serve_forever()
+    app.run(debug=True)

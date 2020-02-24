@@ -26,17 +26,23 @@ def init_app(app, db):
         u = app.user_datastore.get_user(email)
         if u and u.is_active and verify_password(passwd, u.password):
             # login_user(u)
-            return u.get_auth_token()
+            return dict(user=u.to_dict(), token=u.get_auth_token())
         return abort(401)
 
     # @auth_token_required
-    @app.route('/userinfo')
+    @app.route('/api/user')
     def userinfo():
-        info = current_user.to_dict() if not current_user.is_anonymous else None
+        info = (
+            current_user.to_dict()
+            if not current_user.is_anonymous
+            else dict(
+                anonymous=True, alias='unknown', id=None, email=None, logged_in=False
+            )
+        )
         return {'user': info}
 
     # @auth_token_required
-    @app.route('/plans')
+    @app.route('/api/plan')
     def plans():
         try:
             user_id = 1
@@ -46,9 +52,30 @@ def init_app(app, db):
             user = db.session.query(User).get(user_id)
             plans = user.plans.all()
 
-            meals = [meal.to_dict() for plan in plans for meal in plans]
+            meals = [meal.to_dict() for plan in plans for meal in plan.meals]
 
-            return {'plans': [plan.to_dict() for plan in plans], 'meals': meals}
+            return {
+                'plans': [plan.to_dict() for plan in plans],
+                'meals': meals,
+            }
+        except Exception as e:
+            return {'error': str(e)}
+
+    # @auth_token_required
+    @app.route('/api/meal', methods=['POST'])
+    def meals():
+        try:
+            user = db.session.query(User).get(user_id)
+            plans = user.plans.all()
+
+            # if plan id not in plans, return error
+
+            meals = [meal.to_dict() for plan in plans for meal in plan.meals]
+
+            return {
+                'plans': [plan.to_dict() for plan in plans],
+                'meals': meals,
+            }
         except Exception as e:
             return {'error': str(e)}
 
@@ -56,17 +83,17 @@ def init_app(app, db):
     # def usermeals(id):
     #     return {'meals': meals_for_user(id)}
 
-    @app.route('/demo')
+    @app.route('/api/demo')
     def demo_index():
         return demo.generate_data()
 
     # TODO: limit message sizes, ensure auth only
-    @app.sockets.route('/echo')
-    def echo_socket(ws):
-        while not ws.closed:
-            message = ws.receive()
-            if not ws.closed:
-                ws.send(message)
+    # @app.sockets.route('/echo')
+    # def echo_socket(ws):
+    #     while not ws.closed:
+    #         message = ws.receive()
+    #         if not ws.closed:
+    #             ws.send(message)
 
     @app.route('/debug')
     def debug():

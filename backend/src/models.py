@@ -1,3 +1,5 @@
+import datetime
+
 from util import SerializableModel
 from flask_security import RoleMixin, UserMixin
 from db import db
@@ -37,7 +39,11 @@ class User(SerializableModel, db.Model, UserMixin):
 class Meal(SerializableModel, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False)
-    plan_id = db.Column(db.Integer, db.ForeignKey('plan.id'))
+    planned_date = db.Column(db.DateTime, nullable=True)
+    created_date = db.Column(
+        db.DateTime, default=datetime.datetime.utcnow, nullable=False
+    )
+    plan_id = db.Column(db.Integer, db.ForeignKey('plan.id'), nullable=True)
 
 
 class Plan(SerializableModel, db.Model):

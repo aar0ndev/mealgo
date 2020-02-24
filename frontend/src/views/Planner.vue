@@ -1,18 +1,41 @@
 <template>
-    <div class="planner">
-        <Calendar v-model="date" :num-weeks=2 />
-        <div> {{ date.toLocaleDateString() }} </div>
-        <div v-if="todaysMeals.length">
-          <div v-for="meal in todaysMeals" :key="meal.uid || meal.text">
-            <h3 v-if="editMealUid != meal.uid"><span @click="startEditMeal(meal)">{{meal.text}} </span> <button @click="removeMeal(meal)">X</button></h3>
-            <input v-else type="text" v-model="editMealName" @change="editMeal(meal)" @blur="editMeal(meal)" :ref="'editMealInput-'+meal.uid"/>
-          </div>
-        </div>
-        <div v-if="!(searchVisible || addVisible)"><button @click="searchVisible = true">Search Meals</button></div>
-        <div v-if="searchVisible" class="searchbox"><SearchInput :values="allMeals" @change="addMeal" :focus="true" @cancel="searchVisible=false"/></div>
-        <div v-if="!(searchVisible || addVisible)"><button @click="addVisible = true">[+] Add New</button></div>
-        <div v-if="addVisible" class="addbox"><AddMealInput @change="addNewMeal" :focus="true" @cancel="addVisible=false"/></div>
+  <div class="planner">
+    <Calendar v-model="date" :num-weeks="2" />
+    <div>{{ date.toLocaleDateString() }}</div>
+    <div v-if="todaysMeals.length">
+      <div v-for="meal in todaysMeals" :key="meal.uid || meal.text">
+        <h3 v-if="editMealUid != meal.uid">
+          <span @click="startEditMeal(meal)">{{meal.text}}</span>
+          <button @click="removeMeal(meal)">X</button>
+        </h3>
+        <input
+          v-else
+          type="text"
+          v-model="editMealName"
+          @change="editMeal(meal)"
+          @blur="editMeal(meal)"
+          :ref="'editMealInput-'+meal.uid"
+        />
+      </div>
     </div>
+    <div v-if="!(searchVisible || addVisible)">
+      <button @click="searchVisible = true">Search Meals</button>
+    </div>
+    <div v-if="searchVisible" class="searchbox">
+      <SearchInput
+        :values="allMeals"
+        @change="addMeal"
+        :focus="true"
+        @cancel="searchVisible=false"
+      />
+    </div>
+    <div v-if="!(searchVisible || addVisible)">
+      <button @click="addVisible = true">[+] Add New</button>
+    </div>
+    <div v-if="addVisible" class="addbox">
+      <AddMealInput @change="addNewMeal" :focus="true" @cancel="addVisible=false" />
+    </div>
+  </div>
 </template>
 
 <script>
@@ -70,20 +93,34 @@ export default {
     startEditMeal (meal) {
       this.editMealUid = meal.uid
       this.editMealName = meal.text
-      this.$nextTick(() => setTimeout(() => this.$refs['editMealInput-' + meal.uid][0].focus(), 10))
+      this.$nextTick(() =>
+        setTimeout(() => this.$refs['editMealInput-' + meal.uid][0].focus(), 10)
+      )
     }
   },
-  mounted () {
+  async mounted () {
     const self = this
-    fetch('/data/meals.json').then(res => res.ok ? res.json() : { meals: [] }).then(data => { self.allMeals = data.meals })
-    this.meals = JSON.parse(localStorage.getItem('meals') || '[]')
+    if (this.$global.loggedIn) {
+      // get actual plan
+      // todo: add functionality around multiple plans
+      var { meals } = await this.$api.get('plans')
+      this.meals = meals
+    } else {
+      // get dummy info
+      fetch('/data/meals.json')
+        .then(res => (res.ok ? res.json() : { meals: [] }))
+        .then(data => {
+          self.allMeals = data.meals
+        })
+      this.meals = JSON.parse(localStorage.getItem('meals') || '[]')
+    }
   }
 }
 </script>
 
 <style scoped>
-
-.searchbox, .addbox {
+.searchbox,
+.addbox {
   max-width: 400px;
 }
 </style>
