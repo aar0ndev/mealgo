@@ -3,9 +3,9 @@
     <Calendar v-model="date" :num-weeks="2" />
     <div>{{ date.toLocaleDateString() }}</div>
     <div v-if="todaysMeals.length">
-      <div v-for="meal in todaysMeals" :key="meal.uid || meal.text">
+      <div v-for="meal in todaysMeals" :key="meal.uid || meal.name">
         <h3 v-if="editMealUid != meal.uid">
-          <span @click="startEditMeal(meal)">{{meal.text}}</span>
+          <span @click="startEditMeal(meal)">{{meal.name}}</span>
           <button @click="removeMeal(meal)">X</button>
         </h3>
         <input
@@ -43,6 +43,10 @@ import Calendar from '@/components/Calendar.vue'
 import SearchInput from '@/components/SearchInput.vue'
 import AddMealInput from '@/components/AddMealInput.vue'
 import { generateID } from '@/util.js'
+
+function getDateString (date) {
+  return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate()
+}
 export default {
   components: { Calendar, SearchInput, AddMealInput },
   data () {
@@ -59,7 +63,7 @@ export default {
   },
   computed: {
     dateString () {
-      return this.date && this.date.toISOString().substring(0, 10)
+      return this.date && getDateString(this.date)
     },
     todaysMeals () {
       return this.meals.filter(m => m.date === this.dateString)
@@ -71,28 +75,33 @@ export default {
     }
   },
   methods: {
-    addMeal (meal) {
+    async addMeal (meal) {
       var newMeal = { ...meal, date: this.dateString, uid: generateID() }
       this.meals = [...this.meals, newMeal]
       this.searchVisible = false
+      var _meal = await this.$api.add('meal', meal)
+      this.meals = [...this.meals.filter(m => m.uid !== meal.uid), { ...meal, ..._meal }]
     },
     addNewMeal (mealName) {
-      this.addMeal({ text: mealName })
+      this.addMeal({ name: mealName })
       this.addVisible = false
     },
-    removeMeal (meal) {
+    async removeMeal (meal) {
       this.meals = this.meals.filter(m => m.uid !== meal.uid)
+      await this.$api.delete('meal', meal.id)
     },
     editMeal (meal) {
       if (this.editMealUid === '') return
       this.editMealUid = ''
-      if (meal.text === this.editMealName) return
-      meal.text = this.editMealName
+      if (meal.name === this.editMealName) return
+      meal.name = this.editMealName
       this.meals = [...this.meals]
+      this.$api.update('meal', this.mealOrig, meal)
     },
     startEditMeal (meal) {
+      this.mealOrig = { ...meal }
       this.editMealUid = meal.uid
-      this.editMealName = meal.text
+      this.editMealName = meal.name
       this.$nextTick(() =>
         setTimeout(() => this.$refs['editMealInput-' + meal.uid][0].focus(), 10)
       )
@@ -100,20 +109,25 @@ export default {
   },
   async mounted () {
     const self = this
-    if (this.$global.loggedIn) {
+    // todo: handle per-user cache
+    this.meals = JSON.parse(localStorage.getItem('meals') || '[]')
+    if (this.$global.loggedIn || !navigator.onLine) {
       // get actual plan
-      // todo: add functionality around multiple plans
-      var { meals } = await this.$api.get('plans')
-      this.meals = meals
-    } else {
-      // get dummy info
-      fetch('/data/meals.json')
-        .then(res => (res.ok ? res.json() : { meals: [] }))
-        .then(data => {
-          self.allMeals = data.meals
-        })
-      this.meals = JSON.parse(localStorage.getItem('meals') || '[]')
+      // todo: add functionality around multiple plans/users
+      try {
+        var { meals } = await this.$api.get('plans')
+        this.meals = meals.map(m => ({ ...m, uid: m.id + '_' + generateID(), date: getDateString(new Date(m.planned_date)) }))
+      } catch (err) {
+        console.log(err)
+      }
     }
+
+    // get dummy info
+    fetch('/data/meals.json')
+      .then(res => (res.ok ? res.json() : { meals: [] }))
+      .then(data => {
+        self.allMeals = data.meals
+      })
   }
 }
 </script>

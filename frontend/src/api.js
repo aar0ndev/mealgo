@@ -1,5 +1,6 @@
 var state = {}
 window.state = state
+const API_TOKEN_KEY = '6de43cb1-994e-497a-bfeb-768ba96fa875'
 
 // provide implementation independent abstraction over api requests
 async function request (url, body = null, method = 'GET', headers = {}, wait = true) {
@@ -9,7 +10,7 @@ async function request (url, body = null, method = 'GET', headers = {}, wait = t
   try {
     var opts = {
       headers: {
-        'Authorization': localStorage.getItem('api-token'),
+        'Authorization': localStorage.getItem(API_TOKEN_KEY),
         'Accept': 'application/json',
         'Content-Type': 'application/json;charset=UTF-8',
         ...headers
@@ -47,14 +48,14 @@ export default {
 
     try {
       var { token } = await request('/api/login', body, 'POST')
-      localStorage.setItem('api-token', token)
+      localStorage.setItem(API_TOKEN_KEY, token)
       state.$global.loggedIn = true
     } catch (err) {
       throw new Error(`Unable to login:  ${err.res.statusText} (${err.res.status})`)
     }
   },
   logout () {
-    localStorage.removeItem('api-token')
+    localStorage.removeItem(API_TOKEN_KEY)
     state.$global.loggedIn = false
   },
   async get (type, id = null) {
@@ -67,9 +68,29 @@ export default {
       throw new Error(`${err.res.status} (${err.res.statusText})`)
     }
   },
+  async add (type, body) {
+    // debugger
+    try {
+      var res = await request(`/api/${type}`, body, 'POST')
+      return res
+    } catch (err) {
+      // todo: handle auth errors
+      throw new Error(`${err.res.status} (${err.res.statusText})`)
+    }
+  },
+  async delete (type, id) {
+    // debugger
+    try {
+      var res = await request(`/api/${type}/${id}`, 'DELETE')
+      return res
+    } catch (err) {
+      // todo: handle auth errors
+      throw new Error(`${err.res.status} (${err.res.statusText})`)
+    }
+  },
   setup (vm) {
     state = vm
-    var cachedToken = localStorage.getItem('api-token')
+    var cachedToken = localStorage.getItem(API_TOKEN_KEY)
     if (cachedToken) {
       state.$global.loggedIn = true
     }

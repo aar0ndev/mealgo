@@ -42,7 +42,7 @@ def init_app(app, db):
         return {'user': info}
 
     # @auth_token_required
-    @app.route('/api/plan')
+    @app.route('/api/plans')
     def plans():
         try:
             user_id = 1
