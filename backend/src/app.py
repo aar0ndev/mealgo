@@ -10,7 +10,7 @@ import security
 def create_app():
     app = Flask(__name__)
     # app.sockets = Sockets(app)
-    app.config['DEBUG'] = True
+    # app.config['DEBUG'] = True
     app.config['SECRET_KEY'] = 'super-secret'
     db.init_app(app)
     security.init_app(app)
@@ -19,12 +19,25 @@ def create_app():
     @app.after_request
     def clear_server_header(response):
         response.headers['Server'] = ''
+        # del response.headers['Set-Cookie']
+        # response.set_cookie('session', '', expires=0, httponly=True)
         return response
 
     return app
 
 
 app = create_app()
+
+# add debugging for waitress
+try:
+    import waitress
+except:
+    pass
+else:
+    import logging
+
+    logger = logging.getLogger('waitress')
+    logger.setLevel(logging.DEBUG)
 
 if __name__ == '__main__':
 

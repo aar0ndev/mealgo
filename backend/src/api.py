@@ -1,9 +1,10 @@
+import datetime
 import html
 import json
 import random
 
 from flask import abort, render_template, request
-from flask_security import auth_token_required
+from flask_security import auth_token_required, login_required
 from flask_security.core import current_user
 from flask_security.utils import login_user, verify_password
 
@@ -29,7 +30,6 @@ def init_app(app, db):
             return dict(user=u.to_dict(), token=u.get_auth_token())
         return abort(401)
 
-    # @auth_token_required
     @app.route('/api/user')
     def userinfo():
         info = (
@@ -41,15 +41,11 @@ def init_app(app, db):
         )
         return {'user': info}
 
-    # @auth_token_required
-    @app.route('/api/plans')
+    @app.route('/api/plans', methods=['GET'])
+    @auth_token_required
     def plans():
         try:
-            user_id = 1
-            if not current_user.is_anonymous:
-                user_id = current_user.id
-
-            user = db.session.query(User).get(user_id)
+            user = db.session.query(User).get(current_user.id)
             plans = user.plans.all()
 
             meals = [meal.to_dict() for plan in plans for meal in plan.meals]
@@ -59,29 +55,45 @@ def init_app(app, db):
                 'meals': meals,
             }
         except Exception as e:
-            return {'error': str(e)}
+            return e.message
 
-    # @auth_token_required
     @app.route('/api/meal', methods=['POST'])
+    @auth_token_required
     def meals():
-        try:
-            user = db.session.query(User).get(user_id)
-            plans = user.plans.all()
+        user = current_user
+        o = request.json
+        required_fields = ['name', 'planned_date', 'plan_id']
+        missing_fields = [f for f in required_fields if f not in o]
+        if missing_fields:
+            abort(400, 'missing fields: ' + repr(missing_fields))
+        # todo: check plan is owned by user
+        m = Meal(name=o['name'], plan_id=o['plan_id'], planned_date=o['planned_date'],)
+        db.session.add(m)
+        db.session.commit()
+        return m.to_dict()
+        # if plan id not in plans, return error
 
-            # if plan id not in plans, return error
+    @app.route('/api/meal/<int:id>', methods=['DELETE'])
+    @auth_token_required
+    def delete_meal(id):
+        # todo: check resource owned by user
+        m = db.session.query(Meal).get_or_404(id)
+        db.session.delete(m)
+        db.session.commit()
+        return dict(status='OK')
 
-            meals = [meal.to_dict() for plan in plans for meal in plan.meals]
-
-            return {
-                'plans': [plan.to_dict() for plan in plans],
-                'meals': meals,
-            }
-        except Exception as e:
-            return {'error': str(e)}
-
-    # @app.route('/usermeals/<int:id>')
-    # def usermeals(id):
-    #     return {'meals': meals_for_user(id)}
+    @app.route('/api/meal/<int:id>', methods=['PATCH'])
+    @auth_token_required
+    def meal_patch(id):
+        # todo: check resource owned by user
+        m = db.session.query(Meal).get_or_404(id)
+        patch = request.json
+        if 'planned_date' in patch:
+            m.planned_date = patch['planned_date']
+        if 'name' in patch:
+            m.name = patch['name']
+        db.session.commit()
+        return m.to_dict()
 
     @app.route('/api/demo')
     def demo_index():

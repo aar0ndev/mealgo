@@ -9,6 +9,7 @@ black = {editable = true,git = "https://github.com/aar0ndev/black-single-quote",
 pytest = "*"
 requests = "*"
 ptvsd = "*"
+waitress = "*"
 
 [packages]
 flask = "*"
@@ -20,6 +21,7 @@ bcrypt = "*"
 flask-sockets = "*"
 gunicorn = "*"
 ptvsd = "*"
+flask-login = "==0.4.1"
 
 [requires]
 python_version = "3.8"

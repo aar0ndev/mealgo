@@ -3,14 +3,14 @@ window.state = state
 const API_TOKEN_KEY = '6de43cb1-994e-497a-bfeb-768ba96fa875'
 
 // provide implementation independent abstraction over api requests
-async function request (url, body = null, method = 'GET', headers = {}, wait = true) {
+async function request (url, method = 'GET', body = null, headers = {}, wait = true) {
   if (wait) {
     state.$global.waiting = true
   }
   try {
     var opts = {
       headers: {
-        'Authorization': localStorage.getItem(API_TOKEN_KEY),
+        'Authentication-Token': localStorage.getItem(API_TOKEN_KEY),
         'Accept': 'application/json',
         'Content-Type': 'application/json;charset=UTF-8',
         ...headers
@@ -19,7 +19,7 @@ async function request (url, body = null, method = 'GET', headers = {}, wait = t
       method
     }
 
-    if (method === 'POST') {
+    if (method === 'POST' || method === 'PATCH') {
       opts.body = JSON.stringify(body)
     }
 
@@ -47,7 +47,7 @@ export default {
     }
 
     try {
-      var { token } = await request('/api/login', body, 'POST')
+      var { token } = await request('/api/login', 'POST', body)
       localStorage.setItem(API_TOKEN_KEY, token)
       state.$global.loggedIn = true
     } catch (err) {
@@ -71,7 +71,7 @@ export default {
   async add (type, body) {
     // debugger
     try {
-      var res = await request(`/api/${type}`, body, 'POST')
+      var res = await request(`/api/${type}`, 'POST', body)
       return res
     } catch (err) {
       // todo: handle auth errors
@@ -81,7 +81,17 @@ export default {
   async delete (type, id) {
     // debugger
     try {
-      var res = await request(`/api/${type}/${id}`, 'DELETE')
+      var res = await request(`/api/${type}/${id}`, 'DELETE', null)
+      return res
+    } catch (err) {
+      // todo: handle auth errors
+      throw new Error(`${err.res.status} (${err.res.statusText})`)
+    }
+  },
+  async update (type, id, body) {
+    // debugger
+    try {
+      var res = await request(`/api/${type}/${id}`, 'PATCH', body)
       return res
     } catch (err) {
       // todo: handle auth errors
@@ -94,5 +104,6 @@ export default {
     if (cachedToken) {
       state.$global.loggedIn = true
     }
+    return vm
   }
 }

@@ -44,8 +44,8 @@ import SearchInput from '@/components/SearchInput.vue'
 import AddMealInput from '@/components/AddMealInput.vue'
 import { generateID } from '@/util.js'
 
-function getDateString (date) {
-  return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate()
+function getDateInt (date) {
+  return (date.getFullYear() * 100 + (date.getMonth() + 1)) * 100 + date.getDate()
 }
 export default {
   components: { Calendar, SearchInput, AddMealInput },
@@ -62,11 +62,11 @@ export default {
     }
   },
   computed: {
-    dateString () {
-      return this.date && getDateString(this.date)
+    dateInt () {
+      return this.date && getDateInt(this.date)
     },
     todaysMeals () {
-      return this.meals.filter(m => m.date === this.dateString)
+      return this.meals.filter(m => m.planned_date === this.dateInt)
     }
   },
   watch: {
@@ -75,15 +75,16 @@ export default {
     }
   },
   methods: {
-    async addMeal (meal) {
-      var newMeal = { ...meal, date: this.dateString, uid: generateID() }
+    async addMeal ({ text }) {
+      // todo: use current plan id
+      var newMeal = { name: text, planned_date: this.dateInt, uid: generateID(), plan_id: 1 }
       this.meals = [...this.meals, newMeal]
-      this.searchVisible = false
-      var _meal = await this.$api.add('meal', meal)
-      this.meals = [...this.meals.filter(m => m.uid !== meal.uid), { ...meal, ..._meal }]
+      // this.searchVisible = false
+      this.$store.addMeal(newMeal)
+      // this.meals = [...this.meals.filter(m => m.uid !== meal.uid), { ...meal, ..._meal }]
     },
     addNewMeal (mealName) {
-      this.addMeal({ name: mealName })
+      this.addMeal({ text: mealName })
       this.addVisible = false
     },
     async removeMeal (meal) {
@@ -96,7 +97,7 @@ export default {
       if (meal.name === this.editMealName) return
       meal.name = this.editMealName
       this.meals = [...this.meals]
-      this.$api.update('meal', this.mealOrig, meal)
+      this.$api.update('meal', this.mealOrig.id, meal)
     },
     startEditMeal (meal) {
       this.mealOrig = { ...meal }
@@ -116,7 +117,7 @@ export default {
       // todo: add functionality around multiple plans/users
       try {
         var { meals } = await this.$api.get('plans')
-        this.meals = meals.map(m => ({ ...m, uid: m.id + '_' + generateID(), date: getDateString(new Date(m.planned_date)) }))
+        this.meals = meals.map(m => ({ ...m, uid: m.id + '_' + generateID() }))
       } catch (err) {
         console.log(err)
       }

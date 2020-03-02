@@ -1,3 +1,6 @@
+from datetime import date
+
+
 def _check_col(column):
     column_name = str(column)
     BAD_WORDS = ['pass']
@@ -76,6 +79,10 @@ class ArgParser:
             self._commands[argv[1]]()
         else:
             print('unknown command: ' + argv[1])
+
+
+def to_date_int(date: date):
+    (date.year * 100 + date.month) * 100 + date.day
 
 
 if __name__ == '__main__':
