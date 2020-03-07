@@ -54,7 +54,6 @@ export default {
   },
   methods: {
     logout () {
-      // debugger;
       this.$api.logout()
     }
   }

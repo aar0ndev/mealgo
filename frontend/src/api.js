@@ -59,7 +59,6 @@ export default {
     state.$global.loggedIn = false
   },
   async get (type, id = null) {
-    // debugger
     try {
       var res = await request(`/api/${type}` + (id ? `/${id}` : ''))
       return res
@@ -69,7 +68,6 @@ export default {
     }
   },
   async add (type, body) {
-    // debugger
     try {
       var res = await request(`/api/${type}`, 'POST', body)
       return res
@@ -79,7 +77,6 @@ export default {
     }
   },
   async delete (type, id) {
-    // debugger
     try {
       var res = await request(`/api/${type}/${id}`, 'DELETE', null)
       return res
@@ -89,7 +86,6 @@ export default {
     }
   },
   async update (type, id, body) {
-    // debugger
     try {
       var res = await request(`/api/${type}/${id}`, 'PATCH', body)
       return res

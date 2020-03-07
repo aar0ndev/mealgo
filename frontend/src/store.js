@@ -50,7 +50,6 @@ export default {
     addMeal (meal) {
       this.meals = [...this.meals, meal]
       var pendingAction = { type: 'meal', data: meal, action: 'add', added: new Date(), pendingId: nextId(), maxRetries: 3 }
-      debugger
       return tryAdd(this, pendingAction)
     },
     async waitUntilOnline () {
