@@ -79,7 +79,7 @@ export default {
       // todo: use current plan id
       var newMeal = { name: text, planned_date: this.dateInt, uid: generateID(), plan_id: 1 }
       this.meals = [...this.meals, newMeal]
-      // this.searchVisible = false
+      this.searchVisible = false
       this.$store.addMeal(newMeal)
       // this.meals = [...this.meals.filter(m => m.uid !== meal.uid), { ...meal, ..._meal }]
     },
