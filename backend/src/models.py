@@ -1,15 +1,8 @@
 import datetime
 
 from util import SerializableModel
-from flask_security import RoleMixin, UserMixin
+from flask_login import UserMixin
 from db import db
-
-
-roles_users = db.Table(
-    'roles_users',
-    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
-    db.Column('role_id', db.Integer(), db.ForeignKey('role.id')),
-)
 
 plans_users = db.Table(
     'plans_users',
@@ -18,23 +11,20 @@ plans_users = db.Table(
 )
 
 
-class Role(db.Model, RoleMixin):
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
-
-
 class User(SerializableModel, db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
+    alt_id = db.Column(db.String(64), unique=True, nullable=False)
     alias = db.Column(db.String(128), nullable=False)
     email = db.Column(db.String(128), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
     active = db.Column(db.Boolean())
     confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship(
-        'Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic')
-    )
+    #roles = db.relationship(
+    #    'Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic')
+    #)
 
+    def get_id(self):
+        return self.alt_id
 
 class Meal(SerializableModel, db.Model):
     id = db.Column(db.Integer, primary_key=True)

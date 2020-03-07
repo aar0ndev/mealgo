@@ -4,13 +4,16 @@ import json
 import random
 
 from flask import abort, render_template, request
-from flask_security import auth_token_required, login_required
-from flask_security.core import current_user
-from flask_security.utils import login_user, verify_password
+from flask_login import login_required, current_user, login_user
+
+import bcrypt
+# from flask_security import auth_token_required, login_required
+# from flask_security.core import current_user
+# from flask_security.utils import login_user, verify_password
 
 import demo
 from models import Meal, Plan, User
-
+from auth import verify_password, hash_password, get_auth_token
 
 def init_app(app, db):
     @app.route('/')
@@ -24,10 +27,10 @@ def init_app(app, db):
         email = login_data['email']
         passwd = login_data['password']
 
-        u = app.user_datastore.get_user(email)
+        u = User.query.filter_by(email=email).first()
         if u and u.is_active and verify_password(passwd, u.password):
-            # login_user(u)
-            return dict(user=u.to_dict(), token=u.get_auth_token())
+            login_user(u)
+            return dict(user=u.to_dict(), token=get_auth_token(u))
         return abort(401)
 
     @app.route('/api/user')
@@ -42,7 +45,7 @@ def init_app(app, db):
         return {'user': info}
 
     @app.route('/api/plans', methods=['GET'])
-    @auth_token_required
+    @login_required
     def plans():
         try:
             user = db.session.query(User).get(current_user.id)
@@ -58,7 +61,7 @@ def init_app(app, db):
             return e.message
 
     @app.route('/api/meal', methods=['POST'])
-    @auth_token_required
+    @login_required
     def meals():
         user = current_user
         o = request.json
@@ -74,7 +77,7 @@ def init_app(app, db):
         # if plan id not in plans, return error
 
     @app.route('/api/meal/<int:id>', methods=['DELETE'])
-    @auth_token_required
+    @login_required
     def delete_meal(id):
         # todo: check resource owned by user
         m = db.session.query(Meal).get_or_404(id)
@@ -82,8 +85,15 @@ def init_app(app, db):
         db.session.commit()
         return dict(status='OK')
 
+    @app.route('/api/meal/<int:id>', methods=['GET'])
+    @login_required
+    def get_meal(id):
+        # todo: check resource owned by user
+        m = db.session.query(Meal).get_or_404(id)
+        return m.to_dict()
+
     @app.route('/api/meal/<int:id>', methods=['PATCH'])
-    @auth_token_required
+    @login_required
     def meal_patch(id):
         # todo: check resource owned by user
         m = db.session.query(Meal).get_or_404(id)
@@ -98,15 +108,3 @@ def init_app(app, db):
     @app.route('/api/demo')
     def demo_index():
         return demo.generate_data()
-
-    # TODO: limit message sizes, ensure auth only
-    # @app.sockets.route('/echo')
-    # def echo_socket(ws):
-    #     while not ws.closed:
-    #         message = ws.receive()
-    #         if not ws.closed:
-    #             ws.send(message)
-
-    @app.route('/debug')
-    def debug():
-        return render_template('socket_debug.html')
