@@ -3,7 +3,7 @@
     <header id="nav">
       <div id="nav-container">
         <span id="home">
-          <div class="debug">
+          <div class="debug" v-if="$global.NODE_ENV == 'development'">
             loggedIn
             <input type="checkbox" v-model="$global.loggedIn" />
             waiting

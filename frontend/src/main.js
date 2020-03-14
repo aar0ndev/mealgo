@@ -15,7 +15,8 @@ Vue.prototype.$global = new Vue({
     return {
       loggedIn: false,
       waiting: false,
-      online: true
+      online: true,
+      NODE_ENV: process.env.NODE_ENV
     }
   }
 })
