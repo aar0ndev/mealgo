@@ -27,8 +27,8 @@ async function tryAdd (vm, actionObject) {
     if (actionObject.retries >= actionObject.maxRetries) {
       throw actionObject.err || new Error('max retries exceeded')
     }
-    await sleep(0.2)
-    await tryAdd(vm, actionObject)
+    await sleep(0.5)
+    return tryAdd(vm, actionObject)
   }
   return res
 }

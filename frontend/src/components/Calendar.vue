@@ -1,8 +1,12 @@
 <template>
   <div class="container">
+
   <div class="controls">
+    <button @click="changeWeek(null)" :disabled="sameDate(selected,today)">Today</button>
     <button class='weekchange' @click="changeWeek(-1)">▲</button><button class='weekchange' @click="changeWeek(1)">▼</button>
+    <div class="datestring">{{ selected.toLocaleDateString('default', {month: 'long', day: 'numeric', year: 'numeric'}) }}</div>
   </div>
+
   <div class="calendar">
     <div class="header">
       <div v-for="day in 'Su Mo Tu We Th Fr Sa'.split(' ')" :key="day" class="day">{{day[0]}}</div>
@@ -11,7 +15,9 @@
 
       <a v-for="day in days" :key="day.toString()" @click="change(day)">
 
-        <div class="day" :class="{today: isToday(day), selected: isSelected(day)}">{{day.getDate()}}</div>
+        <div class="day" :class="{today: isToday(day), selected: isSelected(day)}">
+          <span v-if="day.getDate() == 1" style="position: absolute; left: 10px; top: -10px; font-size: 14px">{{day.toLocaleDateString('default', {month: 'long'})}}</span>
+          {{day.getDate()}}</div>
       </a>
 
     </transition-group>
@@ -44,6 +50,11 @@ export default {
       return darr
     }
   },
+  watch: {
+    selected () {
+      this.$emit('input', this.selected)
+    }
+  },
   methods: {
     isToday (date) {
       return !!this.today && this.today.getDate() === date.getDate() &&
@@ -51,15 +62,24 @@ export default {
       this.today.getFullYear() === date.getFullYear()
     },
     isSelected (date) {
-      return !!this.selected && this.selected.getDate() === date.getDate() &&
-      this.selected.getMonth() === date.getMonth() &&
-      this.selected.getFullYear() === date.getFullYear()
+      // return !!this.selected && this.selected.getDate() === date.getDate() &&
+      // this.selected.getMonth() === date.getMonth() &&
+      // this.selected.getFullYear() === date.getFullYear()
+      return this.sameDate(date, this.selected)
+    },
+    sameDate (date1, date2) {
+      return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
     },
     changeWeek (num) {
-      this.start = new Date(this.start.getFullYear(), this.start.getMonth(), this.start.getDate() + num * 7)
+      if (num == null) {
+        this.start = start
+        this.selected = today
+      } else {
+        this.start = new Date(this.start.getFullYear(), this.start.getMonth(), this.start.getDate() + num * 7)
+        this.selected = new Date(this.selected.getFullYear(), this.selected.getMonth(), this.selected.getDate() + num * 7)
+      }
     },
     change (date) {
-      this.$emit('input', date)
       this.selected = date
     }
   }
@@ -88,6 +108,7 @@ export default {
   border: 1px solid #eee;
   padding: 5px;
   cursor: pointer;
+  position: relative;
 }
 
 .week .day:hover {
@@ -114,9 +135,19 @@ export default {
 
 .controls {
   xposition: absolute;
+  position: relative;
   text-align: right;
   xtop: -48px;
   xright: 0;
+}
+
+.datestring {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: 14pt;
+  min-height: 48px;
+  line-height: 48px;
 }
 
 .controls button {
