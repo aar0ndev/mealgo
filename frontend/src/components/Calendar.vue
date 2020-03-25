@@ -1,26 +1,29 @@
 <template>
   <div class="container">
-
-  <div class="controls">
-    <button @click="changeWeek(null)" :disabled="sameDate(selected,today)">Today</button>
-    <button class='weekchange' @click="changeWeek(-1)">▲</button><button class='weekchange' @click="changeWeek(1)">▼</button>
-    <div class="datestring">{{ selected.toLocaleDateString('default', {month: 'long', day: 'numeric', year: 'numeric'}) }}</div>
-  </div>
-
-  <div class="calendar">
-    <div class="header">
-      <div v-for="day in 'Su Mo Tu We Th Fr Sa'.split(' ')" :key="day" class="day">{{day[0]}}</div>
+    <div class="controls">
+      <button @click="changeWeek(null)" :disabled="sameDate(selected,today)">Today</button>
+      <button class="weekchange" @click="changeWeek(-1)">▲</button>
+      <button class="weekchange" @click="changeWeek(1)">▼</button>
+      <div
+        class="datestring"
+      >{{ selected.toLocaleDateString('default', {month: 'long', day: 'numeric', year: 'numeric'}) }}</div>
     </div>
-    <transition-group name="fade" class="week" tag="div">
 
-      <a v-for="day in days" :key="day.toString()" @click="change(day)">
-
-        <div class="day" :class="{today: isToday(day), selected: isSelected(day)}">
-          <span v-if="day.getDate()===1 || sameDate(day, start)" class="dayMonth">{{day.toLocaleDateString('default', {month: 'long'})}}</span>
-          {{day.getDate()}}</div>
-      </a>
-
-    </transition-group>
+    <div class="calendar">
+      <div class="header">
+        <div v-for="day in 'Su Mo Tu We Th Fr Sa'.split(' ')" :key="day" class="day">{{day[0]}}</div>
+      </div>
+      <transition-group name="fade" class="week" tag="div">
+        <a v-for="day in days" :key="day.toString()" @click="change(day)">
+          <div class="day" :class="{today: isToday(day), selected: isSelected(day)}">
+            <span
+              v-if="day.getDate()===1 || sameDate(day, start)"
+              class="dayMonth"
+            >{{day.toLocaleDateString('default', {month: 'long'})}}</span>
+            {{day.getDate()}}
+          </div>
+        </a>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -28,7 +31,11 @@
 <script>
 const now = new Date()
 const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-const start = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay())
+const start = new Date(
+  today.getFullYear(),
+  today.getMonth(),
+  today.getDate() - today.getDay()
+)
 export default {
   name: 'Calendar',
   props: ['value', 'numWeeks'],
@@ -57,9 +64,12 @@ export default {
   },
   methods: {
     isToday (date) {
-      return !!this.today && this.today.getDate() === date.getDate() &&
-      this.today.getMonth() === date.getMonth() &&
-      this.today.getFullYear() === date.getFullYear()
+      return (
+        !!this.today &&
+        this.today.getDate() === date.getDate() &&
+        this.today.getMonth() === date.getMonth() &&
+        this.today.getFullYear() === date.getFullYear()
+      )
     },
     isSelected (date) {
       // return !!this.selected && this.selected.getDate() === date.getDate() &&
@@ -68,15 +78,27 @@ export default {
       return this.sameDate(date, this.selected)
     },
     sameDate (date1, date2) {
-      return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate()
+      return (
+        date1.getFullYear() === date2.getFullYear() &&
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate()
+      )
     },
     changeWeek (num) {
       if (num === null) {
         this.start = start
         this.selected = today
       } else {
-        this.start = new Date(this.start.getFullYear(), this.start.getMonth(), this.start.getDate() + num * 7)
-        this.selected = new Date(this.selected.getFullYear(), this.selected.getMonth(), this.selected.getDate() + num * 7)
+        this.start = new Date(
+          this.start.getFullYear(),
+          this.start.getMonth(),
+          this.start.getDate() + num * 7
+        )
+        this.selected = new Date(
+          this.selected.getFullYear(),
+          this.selected.getMonth(),
+          this.selected.getDate() + num * 7
+        )
       }
     },
     change (date) {
@@ -131,10 +153,11 @@ export default {
 }
 
 .today {
-  background: #DDE;
+  background: #dde;
 }
 
-.selected, .day.selected:hover {
+.selected,
+.day.selected:hover {
   border-color: blue;
 }
 
