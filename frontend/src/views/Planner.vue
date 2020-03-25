@@ -32,9 +32,10 @@
             v-model="editMealName"
             @change="editMeal(meal)"
             @blur="editMeal(meal)"
+            @keypress.enter="editMeal(meal)"
             :ref="'editMealInput-'+meal.uid"
           />
-          <button class='remove-meal-button' @click="removeMeal(meal)">⌫</button>
+          <button class='remove-meal-button' @mousedown="removeMeal(meal)" @touchdown="removeMeal(meal)">⌫</button>
         </div>
       </div>
     </div>
