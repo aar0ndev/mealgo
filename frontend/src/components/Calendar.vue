@@ -16,7 +16,7 @@
       <a v-for="day in days" :key="day.toString()" @click="change(day)">
 
         <div class="day" :class="{today: isToday(day), selected: isSelected(day)}">
-          <span v-if="day.getDate() == 1" style="position: absolute; left: 10px; top: -10px; font-size: 14px">{{day.toLocaleDateString('default', {month: 'long'})}}</span>
+          <span v-if="day.getDate()===1 || sameDate(day, start)" class="dayMonth">{{day.toLocaleDateString('default', {month: 'long'})}}</span>
           {{day.getDate()}}</div>
       </a>
 
@@ -68,10 +68,10 @@ export default {
       return this.sameDate(date, this.selected)
     },
     sameDate (date1, date2) {
-      return date1.getFullYear() == date2.getFullYear() && date1.getMonth() == date2.getMonth() && date1.getDate() == date2.getDate()
+      return date1.getFullYear() === date2.getFullYear() && date1.getMonth() === date2.getMonth() && date1.getDate() === date2.getDate()
     },
     changeWeek (num) {
-      if (num == null) {
+      if (num === null) {
         this.start = start
         this.selected = today
       } else {
@@ -109,6 +109,19 @@ export default {
   padding: 5px;
   cursor: pointer;
   position: relative;
+}
+
+.header .day {
+  font-size: 0.8em;
+  width: 100%;
+}
+
+.day .dayMonth {
+  position: absolute;
+  right: 5px;
+  top: -16px;
+  font-size: 14px;
+  color: #888;
 }
 
 .week .day:hover {
