@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="call-to-action">
-      <router-link class="primary" to="signup">Get Started</router-link>
+      <router-link class="primary" :to="$global.loggedIn && 'planner' || 'signup'">Get Started</router-link>
     </div>
     <div class="boxes">
       <div class="box">
