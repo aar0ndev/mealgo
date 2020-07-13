@@ -11,7 +11,9 @@
           </div>
           <router-link to="/" class="logo">MealGo</router-link>
         </span>
-        <span id="links">
+        <span id="links" :class="{linksExpanded}">
+          <HamburgerButton @click.native="toggleLinks" class="linkToggle" @blur.native="linkToggleBlur">
+          </HamburgerButton>
           <template v-if="$global.loggedIn">
             <router-link to="/planner">Planner</router-link>
             <router-link to="/recipes">Recipes</router-link>
@@ -44,17 +46,27 @@
 
 <script>
 import WaitingSpinner from '@/components/WaitingSpinner.vue'
+import HamburgerButton from '@/components/HamburgerButton.vue'
 
 export default {
   components: {
+    HamburgerButton,
     WaitingSpinner
   },
   data () {
-    return {}
+    return {
+      linksExpanded: false
+    }
   },
   methods: {
     logout () {
       this.$api.logout()
+    },
+    toggleLinks () {
+      this.linksExpanded = !this.linksExpanded
+    },
+    linkToggleBlur () {
+      this.$nextTick(setTimeout(() => { this.linksExpanded = false }, 200))
     }
   }
 }
@@ -238,5 +250,39 @@ a:hover {
   font-size: 15px;
   line-height: 1em;
   z-index: 20;
+}
+
+.linkToggle {
+  display: none;
+}
+
+@media only screen and (max-width: 750px) {
+  .linkToggle {
+    display: unset;
+  }
+
+  #links a {
+    display: none;
+  }
+
+  #links.linksExpanded {
+    position: fixed;
+    z-index: 100;
+    background: white;
+    left: 0;
+    top: 0;
+    width: 100vw;
+  box-shadow: 0 3px 10px -6px black;
+  }
+
+  #links.linksExpanded a {
+    display: block;
+  }
+
+  #links.linksExpanded .linkToggle {
+    position: fixed;
+    right: 20px;
+    top: 0px;
+  }
 }
 </style>
